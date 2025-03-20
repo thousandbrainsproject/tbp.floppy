@@ -16,12 +16,15 @@ Floppy is a framework for analyzing and counting floating-point operations (FLOP
 
 ## Installation
 
-For `monty_lab` conda environment, please follow instructions from [Thousand Brains Project documentation](https://thousandbrainsproject.readme.io/docs/getting-started) and run:
+Floppy can be installed in your environment to profile code. For Monty specifically, follow these directions:
+
+1. First, clone and install the `tbp.monty` repository in `~/tbp/tbp.monty` directory by following instructions from [Thousand Brains Project documentation](https://thousandbrainsproject.readme.io/docs/getting-started)
+
+2. Next, in `~/tbp/tbp.floppy` clone the `tbp.monty` `conda` environment via:
 
 ```bash
-conda create --clone tbp.monty -n monty_lab
-conda activate monty_lab
-cd path/to/monty_lab/floppy
+conda create --clone tbp.monty -n floppy
+conda activate floppy
 pip install -e .
 ```
 
@@ -35,7 +38,13 @@ with FlopCounter() as counter:
     print(f"FLOPs: {counter.flops}")
 ```
 
-For analyzing an entire codebase:
+For profiling Monty experiments:
+
+```bash
+python floppy/run_flop_counter.py --experiment=dist_agent_1lm_randrot_x_percent_5p
+```
+
+For statically analyzing a repo:
 
 ```bash
 python run_static_analysis.py --dir path/to/analyze
