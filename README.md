@@ -1,124 +1,56 @@
-# tbp.monty_paper
+# 💾 Floppy: FLOP Analysis and Counting Framework
 
-This is a template repository for reproducibility code for papers depending on https://github.com/thousandbrainsproject/tbp.monty.
+Floppy is a framework for analyzing and counting floating-point operations (FLOPs) in Python code, with special focus on numerical computations using NumPy.
 
-To create a repository from this template, find and click the "Use this template" button:
+## Features
 
-![Use this template](./delete_me.png)
+- **Runtime FLOP Counting**: Track FLOPs in your code as it executes
+  - Transparent array operation tracking
+  - Support for high-level NumPy operations
+  - Thread-safe operation
+  - Selective monitoring of code paths
 
-## Make it yours
-
-After copying the template, you need to address the following TODOs.
-
-### `environment.yml`
-
-- Update project `name`.
-- Update `thousandbrainsproject::tbp.monty` version.
-- Add any other dependencies.
-
-### `pyproject.toml`
-
-- Update the project `description`
-- Update the project `name`
-- Update the `Repository` and `Issues` URLs
-
-### Delete template images
-
-- Delete `delete_me.png`
-- Delete `delete_me_too.png`
-
-### `README.md`
-
-- Update for your project
-
-### Recommendations
-
-For a cleaner project commit history, go to your repository settings and in the Pull Requests section, only "Allow squash merging". It also helps to set your default commit message to the "Pull request title" option.
-
-![Pull Request Settings](./delete_me_too.png)
+- **Static Analysis**: Analyze potential FLOP operations in your codebase
+  - Identify potential FLOP-contributing functions
+  - Get insights before execution
 
 ## Installation
 
-The environment for this project is managed with [conda](https://www.anaconda.com/download/success).
-
-To create the environment, run:
-
-### ARM64 (Apple Silicon) (zsh shell)
-```
-conda env create -f environment.yml --subdir=osx-64
-conda init zsh
-conda activate paper # TODO: Update to your paper's name
-conda config --env --set subdir osx-64
-```
-
-### ARM64 (Apple Silicon) (bash shell)
-```
-conda env create -f environment.yml --subdir=osx-64
-conda init
-conda activate paper # TODO: Update to your paper's name
-conda config --env --set subdir osx-64
-```
-
-### Intel (zsh shell)
-```
-conda env create -f environment.yml
-conda init zsh
-conda activate paper # TODO: Update to your paper's name
-```
-
-### Intel (bash shell)
-```
-conda env create -f environment.yml
-conda init
-conda activate paper # TODO: Update to your paper's name
-```
-
-## Experiments
-
-Experiments are defined in the `configs` directory.
-
-After installing the environment, to run an experiment, run:
+For `monty_lab` conda environment, please follow instructions from [Thousand Brains Project documentation](https://thousandbrainsproject.readme.io/docs/getting-started) and run:
 
 ```bash
-python run.py -e <experiment_name>
+conda create --clone tbp.monty -n monty_lab
+conda activate monty_lab
+cd path/to/monty_lab/floppy
+pip install -e .
 ```
 
-To run an experiment where episodes are executed in parallel, run:
+## Quick Start
+
+```python
+from floppy.counting.base import FlopCounter
+
+with FlopCounter() as counter:
+    result = np.matmul(a, b)
+    print(f"FLOPs: {counter.flops}")
+```
+
+For analyzing an entire codebase:
 
 ```bash
-python run_parallel.py -e <experiment_name> -n <num_parallel>
+python run_static_analysis.py --dir path/to/analyze
 ```
 
-## Development
+## Documentation
 
-After installing the environment, you can run the following commands to check your code.
+- [Getting Started](docs/user_guide/getting_started.md)
+- [User Guide](docs/user_guide/index.md)
+- [API Reference](docs/api/index.md)
 
-### Run formatter
+## Contributing
 
-```bash
-ruff format
-```
+Contributions are welcome! Please follow the [Thousand Brains Project Contributing Guide](https://thousandbrainsproject.readme.io/docs/contributing).
 
-### Run style checks
+## License
 
-```bash
-ruff check
-```
-
-### Run dependency checks
-
-```bash
-deptry .
-```
-
-### Run static type checks
-
-```bash
-mypy .
-```
-
-### Run tests
-
-```bash
-pytest
-```
+The MIT License. See the [LICENSE](LICENSE) for details.
