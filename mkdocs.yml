@@ -32,7 +32,6 @@ nav:
   - User Guide:
     - Getting Started: user_guide/getting_started.md
     - User Guide: user_guide/index.md
-  - API Reference: api/index.md
 
 markdown_extensions:
   - pymdownx.highlight:

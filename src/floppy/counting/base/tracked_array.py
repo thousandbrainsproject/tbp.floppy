@@ -8,6 +8,7 @@
 # https://opensource.org/licenses/MIT.
 
 from typing import TYPE_CHECKING, Any, Optional, Union
+import warnings
 
 import numpy as np
 
@@ -186,7 +187,11 @@ class TrackedArray(np.ndarray):
     def _count_flops(
         self, ufunc: np.ufunc, method: str, inputs: tuple, result: Any, **kwargs: Any
     ) -> None:
-        """Count FLOPs for the operation if tracking is active.
+        """Count FLOPs for NumPy universal functions (ufuncs) if tracking is active.
+
+        This method is specifically for counting FLOPs from NumPy ufunc operations.
+        Non-ufunc operations (like matmul, norm, etc.) are handled through the
+        __getattribute__ method and operation registry instead.
 
         Args:
             ufunc: The NumPy universal function that was applied
@@ -350,8 +355,6 @@ class TrackedArray(np.ndarray):
                 # Registry lookup failed, fall back to normal attribute access
                 pass
             except Exception as e:
-                # Log unexpected errors but don't break attribute access
-                import warnings
 
                 warnings.warn(
                     f"Unexpected error in __getattribute__ for {name}: {e!s}"

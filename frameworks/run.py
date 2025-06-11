@@ -65,21 +65,31 @@ def wrap_experiment_with_flops(experiment_cls: Type, run_name: str) -> Type:
                 lm_config["learning_module_args"]["gsg_class"] = (
                     FlopCountingEvidenceGoalStateGenerator
                 )
+            else:
+                raise NotImplementedError(
+                    f"FLOP counting is not implemented for learning module class: {lm_config['learning_module_class']}"
+                )
 
         original_setup(self, modified_config)
 
         # Extract Floppy-specific configurations
         floppy_config = modified_config.get("floppy_config", {})
         results_dir = floppy_config.get("results_dir", "")
+        # Detailed logging is disabled by default to prevent generating
+        # extremely large log files (potentially tens of GB)
         detailed_logging = floppy_config.get("detailed_logging", False)
 
         # Configure logging parameters
         detailed_logger_kwargs = {
+            # Number of operations to buffer before writing to the detailed log file
+            # Higher values reduce I/O overhead
             "batch_size": floppy_config.get("detailed_batch_size", 10000),
             "log_level": LogLevel[(floppy_config.get("log_level", "FUNCTION"))],
         }
         csv_logger_kwargs = {
-            "batch_size": floppy_config.get("csv_batch_size", 1000),
+            # Number of operations to buffer before writing to the CSV file
+            # Higher values reduce I/O overhead
+            "batch_size": floppy_config.get("csv_batch_size", 10000),
         }
 
         # Initialize FLOP tracer with experiment components
@@ -162,7 +172,10 @@ def flop_main(
             type=str,
             choices=["FILE", "FUNCTION", "OPERATION"],
             default="FUNCTION",
-            help="Level of detail for FLOP logging (if detailed_logging is enabled)",
+            help="Level of detail for FLOP logging (if detailed_logging is enabled). \
+            OPERATION logs each individual FLOP operation (most detailed but highest overhead), \
+            FUNCTION aggregates FLOPs by function (balanced detail/performance), \
+            FILE aggregates FLOPs by file (most efficient)",
         )
         cmd_parser.add_argument(
             "--detailed_batch_size",

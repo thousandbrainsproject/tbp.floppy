@@ -80,7 +80,13 @@ class FlopCounter(ContextDecorator):
 
         Note:
             - The counter is not active until used as a context manager with 'with'
-            - Thread-safe FLOP counting is ensured using locks
+            - Thread-safe FLOP counting is ensured using locks:
+                A thread lock is used to protect updates to the internal FLOP counter, 
+                so multiple threads adding to the count won’t interfere with each other. 
+                However, other parts of the system—like monkey-patching NumPy functions 
+                and tracking nested operations—are shared across threads and not isolated. 
+                This means the class is only safe to use in multithreaded code if a single 
+                thread uses it at a time, or if access is carefully synchronized.
             - Nested operations are tracked to avoid double-counting
             - NumPy operations are temporarily monkey-patched while the counter is active
         """
@@ -99,6 +105,16 @@ class FlopCounter(ContextDecorator):
         self._operation_stack: List[str] = []  # Track nested operations
 
         # Initialize the operation registry
+        # The registry is a central component that:
+        # 1. Maps NumPy function names to their FLOP counting implementations
+        # 2. Handles method name aliases (e.g. 'mod' maps to 'remainder' operation)
+        # 3. Tracks module locations for each operation (e.g. np.linalg.norm)
+        # 4. Provides a default set of operations for common NumPy functions
+        #    including arithmetic, trigonometry, linear algebra, and array operations
+        # The registry allows the FlopCounter to:
+        # - Look up how to count FLOPs for any registered operation
+        # - Support both direct function calls and array method calls
+        # - Know where to monkey-patch functions in different NumPy modules
         self.registry: OperationRegistry = OperationRegistry.create_default_registry()
 
         # Create patch targets from registry using module locations
@@ -356,7 +372,6 @@ class FlopCounter(ContextDecorator):
         Returns:
             bool: True if the operation should be excluded from counting, False otherwise.
                 Returns True if:
-                - The call is a nested array operation (to prevent double counting)
                 - The call originates from an excluded path (unless overridden by include_paths)
                 Returns False if:
                 - The call originates from an explicitly included path

@@ -272,8 +272,8 @@ class DiffOperation:
 
         Returns:
             int: Number of floating point operations (FLOPs).
-                 Calculated as FLOPS_PER_DIFF * size(result) where each element requires:
-                 - SUBS_PER_DIFF subtraction between adjacent elements
+                 For n=1: FLOPS_PER_DIFF * size(result)
+                 For n>1: Sum of FLOPs from each intermediate difference operation
 
         Note:
             For an input array of shape (N,) and n=1:
@@ -284,5 +284,22 @@ class DiffOperation:
             For multiple differences (n>1):
             - Each subsequent difference reduces the output size by 1
             - Total FLOPs = sum(N-i for i in range(1, n+1))
+            Example for n=2:
+            - First diff: N-1 FLOPs
+            - Second diff: N-2 FLOPs
+            - Total: (N-1) + (N-2) FLOPs
         """
-        return self.FLOPS_PER_DIFF * np.size(result)
+        # Get the number of differences to compute (n)
+        n = kwargs.get('n', 1) if len(args) < 2 else args[1]
+        if n <= 1:
+            return self.FLOPS_PER_DIFF * np.size(result)
+
+        # For n > 1, we need to sum up FLOPs from each intermediate operation
+        input_array = args[0]
+        axis = kwargs.get('axis', -1)
+        input_size = input_array.shape[axis]
+        
+        # Calculate total FLOPs as sum of FLOPs for each difference operation
+        # For each operation i, we need (input_size - i) FLOPs
+        total_flops = sum(input_size - i for i in range(1, n + 1))
+        return self.FLOPS_PER_DIFF * total_flops

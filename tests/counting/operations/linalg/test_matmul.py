@@ -94,6 +94,38 @@ def test_batch_matmul():
         )
 
 
+def test_4d_batch_matmul():
+    counter = FlopCounter()
+    with counter:
+        # 4D tensor multiplication with shape [2, 2, 2, 3] @ [2, 2, 3, 2]
+        # This represents 4 (2x2) batches arranged in a 2x2 grid
+        a = np.array([
+            [[[1, 2, 3], [4, 5, 6]], [[7, 8, 9], [10, 11, 12]]],
+            [[[13, 14, 15], [16, 17, 18]], [[19, 20, 21], [22, 23, 24]]]
+        ])
+        b = np.array([
+            [[[1, 2], [3, 4], [5, 6]], [[7, 8], [9, 10], [11, 12]]],
+            [[[13, 14], [15, 16], [17, 18]], [[19, 20], [21, 22], [23, 24]]]
+        ])
+        result = a @ b
+        assert counter.flops == 80
+        assert result.shape == (2, 2, 2, 2)
+
+        expected = np.array([[[[  22,   28],
+                [  49,   64]],
+
+               [[ 220,  244],
+                [ 301,  334]]],
+
+
+              [[[ 634,  676],
+                [ 769,  820]],
+
+               [[1264, 1324],
+                [1453, 1522]]]])
+        np.testing.assert_allclose(result, expected)
+
+
 def test_empty():
     counter = FlopCounter()
     with counter:

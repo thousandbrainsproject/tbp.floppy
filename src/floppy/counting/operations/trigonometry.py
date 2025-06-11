@@ -62,10 +62,10 @@ class SineOperation(FlopOperation):
                - Division and modulo by 2π
                - Comparison and adjustment
 
-            2. Taylor series (4-5 terms):
-               - Power calculation: 2 FLOPs × 5 terms = 10 FLOPs
-               - Factorial division: 1 FLOP × 5 terms = 5 FLOPs
-               - Addition to sum: 1 FLOP × 1 terms = 1 FLOP
+            2. Taylor series (4-5 terms):  
+               - Power calculation: (3 - 1) + (5 - 1) + (7 - 1) = 12 FLOPs  # n - 1 FLOPs for terms 2, 3, and 4  
+               - Factorial division: 1 FLOP × 3 terms = 3 FLOPs  # Division for terms 2, 3, and 4  
+               - Addition to sum: k - 1 FLOPs where k is number of terms = 3  
 
             Total: ~20 FLOPs per element
         """
@@ -112,9 +112,9 @@ class CosineOperation(FlopOperation):
                - Comparison and adjustment
 
             2. Taylor series (4-5 terms):
-               - Power calculation: 2 FLOPs × 5 terms = 10 FLOPs
-               - Factorial division: 1 FLOP × 5 terms = 5 FLOPs
-               - Addition to sum: 1 FLOP × 1 terms = 1 FLOP
+               - Power calculation: (3 - 1) + (5 - 1) + (7 - 1) = 12 FLOPs  # n - 1 FLOPs for terms 2, 3, and 4  
+               - Factorial division: 1 FLOP × 3 terms = 3 FLOPs  # Division for terms 2, 3, and 4  
+               - Addition to sum: k - 1 FLOPs where k is number of terms = 3  
 
             Total: ~20 FLOPs per element
         """
@@ -161,9 +161,9 @@ class TangentOperation(FlopOperation):
                - Comparison and adjustment
 
             2. Taylor series (4-5 terms):
-               - Power calculation: 2 FLOPs × 5 terms = 10 FLOPs
-               - Coefficient multiplication/division: 1 FLOP × 5 terms = 5 FLOPs
-               - Addition to sum: 1 FLOP × 1 terms = 1 FLOP
+               - Power calculation: (3 - 1) + (5 - 1) + (7 - 1) = 12 FLOPs  # n - 1 FLOPs for terms 2, 3, and 4  
+               - Factorial division: 1 FLOP × 3 terms = 3 FLOPs  # Division for terms 2, 3, and 4  
+               - Addition to sum: k - 1 FLOPs where k is number of terms = 3  
 
             Total: ~20 FLOPs per element
         """
@@ -314,9 +314,9 @@ class ArcTangentOperation(FlopOperation):
                - π/2 adjustment when needed
 
             2. Taylor series (4-5 terms):
-               - Power calculation: 2 FLOPs × 5 terms = 10 FLOPs
-               - Division by odd number: 1 FLOP × 5 terms = 5 FLOPs
-               - Addition to sum: 1 FLOP × 1 terms = 1 FLOP
+               - Power calculation: (3 - 1) + (5 - 1) + (7 - 1) = 12 FLOPs  # n - 1 FLOPs for terms 2, 3, and 4  
+               - Factorial division: 1 FLOP × 3 terms = 3 FLOPs  # Division for terms 2, 3, and 4  
+               - Addition to sum: k - 1 FLOPs where k is number of terms = 3  
 
             Total: ~20 FLOPs per element
         """

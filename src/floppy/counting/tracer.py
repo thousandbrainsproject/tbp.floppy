@@ -109,6 +109,10 @@ class MontyFlopTracer:
         self.flop_counter = FlopCounter(
             log_manager=self.log_manager,
             include_paths=["tbp.monty"],
+            # Skip certain paths to avoid:
+            # - Double counting (numpy, scipy operations are already counted at a lower level)
+            # - Non-inference related operations (habitat_sim simulation overhead)
+            # - Third-party package operations (site-packages) to focus on Monty-specific FLOPs
             skip_paths=[
                 "site-packages",
                 "numpy",

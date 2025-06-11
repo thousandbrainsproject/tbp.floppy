@@ -45,7 +45,7 @@ def test_diff_n() -> None:
     with counter:
         a = np.array([1, 2, 4, 7, 0])
         result = np.diff(a, n=2)  # Second difference
-        assert counter.flops == 3  # One subtraction per element in result
+        assert counter.flops == 7
         np.testing.assert_allclose(result, np.array([1, 1, -10]))
 
 

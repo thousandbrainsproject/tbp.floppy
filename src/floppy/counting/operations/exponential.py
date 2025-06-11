@@ -29,7 +29,6 @@ class ExponentialOperation(FlopOperation):
     used in its implementation. The operation is counted as 20 FLOPs per element,
     which is a conservative estimate based on common implementations.
 
-
     """
 
     # Constants for the exponential operation

@@ -28,7 +28,11 @@ The `FlopCounter` is the central component that manages FLOP counting across all
        print(f"FLOPs: {counter.flops}")
    ```
 
-2. **Thread-Safe Operation**: All FLOP counting is thread-safe, allowing use in multi-threaded environments.
+2. **Thread-Safe Operation**: The internal FLOP count (`self.flops`) is protected by a `threading.Lock`, which ensures that updates from multiple threads do not interfere with each other. For example, if two threads try to add to the counter at the same time, the lock ensures they don’t overwrite each other’s updates — the final result will be correct.
+
+Only use FlopCounter in a single thread at a time. If you’re in a multithreaded program, make sure:
+- Only one thread is using FlopCounter at any given time.
+- Other threads are not using NumPy while it’s active, unless you fully understand the risks.
 
 3. **Selective Monitoring**:
    - `skip_paths`: Exclude specific code paths from FLOP counting
@@ -192,3 +196,5 @@ The analysis results include:
 - Aggregated statistics across multiple files
 
 This static analysis complements the runtime FLOP counting by helping identify where FLOPs might occur in the codebase, even before execution.
+
+Note: The static analysis tool only identifies potential locations of FLOP operations - it does not automatically implement FLOP counting for these operations. Users of the library are responsible for implementing FLOP counting for any functions identified by the static analysis that aren't already covered in the codebase. This can be done either by implementing the counting directly or by creating a PR/issue to request coverage of the operation.

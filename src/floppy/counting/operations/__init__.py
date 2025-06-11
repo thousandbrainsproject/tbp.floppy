@@ -17,6 +17,7 @@ from .trigonometry import *
 
 __all__ = (
     arithmetic.__all__
+    + exponential.__all__
     + linalg.__all__
     + reduction.__all__
     + signal.__all__

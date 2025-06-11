@@ -45,9 +45,8 @@ python run_static_analysis.py --dir path/to/analyze
 
 ## Documentation
 
-- [Getting Started](docs/user_guide/getting_started.md)
-- [User Guide](docs/user_guide/index.md)
-- [API Reference](docs/api/index.md)
+- [Getting Started](user_guide/getting_started.md)
+- [User Guide](user_guide/index.md)
 
 ## Contributing
 
@@ -55,4 +54,4 @@ Contributions are welcome! Please follow the [Thousand Brains Project Contributi
 
 ## License
 
-The MIT License. See the [LICENSE](LICENSE) for details.
+The MIT License. See the [LICENSE](https://github.com/hlee9212/tbp.floppy/blob/main/LICENSE) for details.

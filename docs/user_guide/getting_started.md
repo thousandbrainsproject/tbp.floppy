@@ -29,6 +29,8 @@ with FlopCounter(logger=logger) as counter:
 
 ### Static Analysis
 
+Static analysis examines your source code without executing it, identifying operations that may contribute to FLOPs by analyzing function calls, mathematical operations, and numerical computations. This helps identify potential FLOP operations in your code. Note that our implementation primarily focuses on operations from NumPy, SciPy, and scikit-learn libraries (commonly used in `tbp.monty`) and may not catch all FLOP operations.
+
 To analyze FLOP operations in source code:
 
 ```bash

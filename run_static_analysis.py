@@ -9,8 +9,10 @@
 
 import argparse
 from pathlib import Path
+import pandas as pd
 
 from floppy.analysis.analyzer import FlopAnalyzer
+from floppy.analysis.exceptions import FileAnalysisError
 
 
 def main(input_dir, output_dir=None):
@@ -34,8 +36,16 @@ def main(input_dir, output_dir=None):
 
         print(f"\nDetailed results saved to: {output_file}")
 
+    except FileNotFoundError as e:
+        raise FileNotFoundError(f"Directory not found - {e}")
+    except FileAnalysisError as e:
+        raise FileAnalysisError(f"Failed to analyze one or more files - {e}")
+    except (OSError, IOError) as e:
+        raise OSError(f"File system error - {e}")
+    except pd.errors.EmptyDataError as e:
+        raise pd.errors.EmptyDataError(f"No results to save - {e}")
     except Exception as e:
-        print(f"Error during analysis: {e!s}")
+        raise Exception(f"Unexpected error during analysis: {e}")
 
 
 if __name__ == "__main__":
