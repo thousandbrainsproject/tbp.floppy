@@ -227,9 +227,6 @@ class FlopCountingEvidenceGraphLM(EvidenceGraphLM):
         )
         dim = search_locations.shape[1]  # Should be 3 for x,y,z coordinates
         
-        # KDTree construction FLOPs
-        kdtree_construction_flops = int((5 + dim) * num_reference_points * np.log2(num_reference_points))
-        
         # Tree Traversal FLOPs
         traversal_flops = num_search_points * dim * np.log2(num_reference_points)
         num_examined_points = int(np.log2(num_reference_points))
@@ -241,7 +238,6 @@ class FlopCountingEvidenceGraphLM(EvidenceGraphLM):
         )
         bounding_box_flops = num_search_points * num_examined_points * dim
         total_flops = int(
-            kdtree_construction_flops
             + traversal_flops
             + distance_flops
             + heap_flops
