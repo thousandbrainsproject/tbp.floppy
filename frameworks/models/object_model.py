@@ -57,15 +57,14 @@ class FlopCountingObjectModel(GraphObjectModel):
                 locations_reduced, n_neighbors=k_n, include_self=False
             )
             # Count FLOPs for kneighbors_graph calculation
-            n = len(locations_reduced)
-            # Calculate distances from each point to all others (n points * (n-1) other points * 9 FLOPs per distance)
-            distance_flops = n * (n - 1) * 9
-            # Add approximate cost for partial sorting to find k nearest neighbors
-            # Using O(n log k) complexity for each point's partial sort
-            if k_n > 0:
-                sorting_flops = n * (n - 1) * np.log2(k_n)
+            num_search_points = len(locations_reduced)
+            num_examined_points = np.log2(num_search_points)
+            dim = locations_reduced.shape[1]
+            
+            distance_flops = num_search_points * num_examined_points * (3 * dim + dim + 1)
+            heap_flops = num_search_points * num_examined_points * np.log2(k_n)
             if self.flop_counter is not None:
-                self.flop_counter.add_flops(distance_flops + sorting_flops)
+                self.flop_counter.add_flops(distance_flops + heap_flops)
 
             scipygraph = torch_geometric.utils.from_scipy_sparse_matrix(scipy_graph)
             edge_index = scipygraph[0]

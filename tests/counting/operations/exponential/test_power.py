@@ -13,6 +13,13 @@ from floppy.counting.base import FlopCounter
 
 
 def test_power_operator_syntax():
+    """Test power operation using operator syntax (a ** b).
+    
+    Note: For array power operations, we use a conservative estimate of 40 FLOPs per element
+    as a worst-case upper bound, regardless of the actual exponent values. This accounts for
+    the general case of fractional exponents which require both logarithm and exponential
+    operations. The total FLOP count is therefore array_size * 40.
+    """
     counter = FlopCounter()
     with counter:
         a = np.array([1, 2, 3])
