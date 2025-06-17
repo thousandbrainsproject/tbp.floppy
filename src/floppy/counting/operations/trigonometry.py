@@ -315,7 +315,7 @@ class ArcTangentOperation(FlopOperation):
 
             2. Taylor series (4-5 terms):
                - Power calculation: (3 - 1) + (5 - 1) + (7 - 1) = 12 FLOPs  # n - 1 FLOPs for terms 2, 3, and 4  
-               - Factorial division: 1 FLOP × 3 terms = 3 FLOPs  # Division for terms 2, 3, and 4  
+               - Constant division: 1 FLOP × 3 terms = 3 FLOPs  # Division for terms 2, 3, and 4  
                - Addition to sum: k - 1 FLOPs where k is number of terms = 3  
 
             Total: ~20 FLOPs per element
