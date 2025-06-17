@@ -98,7 +98,7 @@ def test_4d_batch_matmul():
     counter = FlopCounter()
     with counter:
         # 4D tensor multiplication with shape [2, 2, 2, 3] @ [2, 2, 3, 2]
-        # This represents 4 (2x2) batches arranged in a 2x2 grid
+        # This represents a 2x2 grid of batches, where each batch performs a [2, 3] @ [3, 2] matrix multiplication
         a = np.array([
             [[[1, 2, 3], [4, 5, 6]], [[7, 8, 9], [10, 11, 12]]],
             [[[13, 14, 15], [16, 17, 18]], [[19, 20, 21], [22, 23, 24]]]
