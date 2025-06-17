@@ -148,7 +148,7 @@ For querying nearest neighbors, our implementation breaks down FLOP counting int
    - Where num_examined_points = log₂(num_reference_points) due to balanced tree property
    - 3 operations per dimension (subtract, square, add)
    - dim additions for summing
-   - 1 square root operation
+   - 20 square root operation
 
 3. **Heap Operations:**
    - FLOPs = num_search_points × num_examined_points × log₂(vote_nn)
@@ -157,7 +157,7 @@ For querying nearest neighbors, our implementation breaks down FLOP counting int
 
 4. **Bounding Box Checks:**
    - FLOPs = num_search_points × num_examined_points × dim
-   - Represents comparisons against bounding box boundaries alone one dimension and there is no need for subtraction, squaring, or summation like in Euclidean distance computation
+   - Represents comparisons against bounding box boundaries along one dimension, where there is no need for subtraction, squaring, or summation like in Euclidean distance computation
 
 Total query FLOPs = traversal_flops + distance_flops + heap_flops + bounding_box_flops
 
@@ -166,7 +166,7 @@ Where:
 - num_search_points: number of query points
 - num_reference_points: number of points in the KD-tree
 - dim: dimensionality of the points
-- num_examined_points: approximate number of points visited during traveral and backtracking (estimated as log₂(num_reference_points))
+- num_examined_points: approximate number of points visited during traveral and backtracking (approximate number of points visited during traveral and backtracking (estimated as log₂(num_reference_points)))
 
 Note: These are theoretical approximations. Actual FLOP counts may vary based on:
 
