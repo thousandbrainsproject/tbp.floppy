@@ -121,7 +121,7 @@ class PowerOperation(FlopOperation):
     """
 
     # Constants for different types of power operations
-    FLOPS_PER_SQRT = 1 # As per https://discourse.julialang.org/t/how-many-flops-does-it-take-to-compute-a-square-root/89027
+    FLOPS_PER_SQRT = 1 # As per empirical results in similar implementations, e.g. https://discourse.julialang.org/t/how-many-flops-does-it-take-to-compute-a-square-root/89027
     FLOPS_PER_CBRT = 25  # Specialized cube root algorithm
     FLOPS_PER_RECIPROCAL = 1  # Single division operation
     FLOPS_PER_FRACTIONAL = 40  # Logarithm + exponential for fractional powers
