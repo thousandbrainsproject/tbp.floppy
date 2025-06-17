@@ -157,7 +157,7 @@ For querying nearest neighbors, our implementation breaks down FLOP counting int
 
 4. **Bounding Box Checks:**
    - FLOPs = num_search_points × num_examined_points × dim
-   - Represents comparisons against bounding box boundaries alone one dimension and there is no need for subtraction, squaring, or summation like in Euclidean distance computation
+   - Represents comparisons against bounding box boundaries along one dimension, where there is no need for subtraction, squaring, or summation like in Euclidean distance computation
 
 Total query FLOPs = traversal_flops + distance_flops + heap_flops + bounding_box_flops
 
