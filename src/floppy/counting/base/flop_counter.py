@@ -84,7 +84,7 @@ class FlopCounter(ContextDecorator):
                 A thread lock is used to protect updates to the internal FLOP counter, 
                 so multiple threads adding to the count won’t interfere with each other. 
                 However, other parts of the system (like monkey-patching NumPy functions 
-                and tracking nested operations—are shared across threads and not isolated. 
+                and tracking nested operations) are shared across threads and not isolated. 
                 This means the class is only safe to use in multithreaded code if a single 
                 thread uses it at a time, or if access is carefully synchronized.
             - Nested operations are tracked to avoid double-counting
