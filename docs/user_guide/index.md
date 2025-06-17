@@ -127,7 +127,7 @@ The construction of a k-d tree has a complexity of $O((5+k)n \log_2(n))$ FLOPs, 
 
 For each level of the tree ($\log_2(n)$ levels), we need to:
 
-1. Find the median along the current dimension ($5n$ operations)
+1. Find the median along the current dimension ($5n$ operations, a conservative estimate for median-of-median algorithm which is $O(n)$, see for example empirical results reported here: https://rcoh.me/posts/linear-time-median-finding/)
 2. Partition the points ($O(kn)$ operations to compare k-dimensional points)
 
 Thus, total FLOPs per level = $n + kn = (5 + k)n$, and total across the tree is:
