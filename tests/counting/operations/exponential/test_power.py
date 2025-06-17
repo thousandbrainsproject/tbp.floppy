@@ -90,7 +90,7 @@ def test_sqrt():
     with counter:
         a = np.array([1, 4, 9])
         result = np.sqrt(a)
-        assert counter.flops == 60  # 20 FLOPs per sqrt operation
+        assert counter.flops == 3  # 1 FLOP per sqrt operation
         np.testing.assert_allclose(result, np.array([1, 2, 3]))
 
 

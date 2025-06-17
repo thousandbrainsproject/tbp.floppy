@@ -99,15 +99,15 @@ class StdOperation(FlopOperation):
     - n multiplications for squaring
     - (n-1) additions for sum of squares
     - 1 division for mean of squares
-    - 1 square root (costs 20 FLOPs)
-    Total: 4n + 20 FLOPs
+    - 1 square root (costs 1 FLOP)
+    Total: 4n + 1 FLOPs
 
     Note:
         Scalar inputs return 0 FLOPs as they require no computation.
     """
 
     # Cost of square root operation (other operations cost 1 FLOP each)
-    SQRT_COST = 20
+    SQRT_COST = 1  # As per https://discourse.julialang.org/t/how-many-flops-does-it-take-to-compute-a-square-root/89027
 
     def count_flops(
         self, *args: Any, result: np.ndarray, **kwargs: Any
@@ -135,8 +135,8 @@ class StdOperation(FlopOperation):
                 * n multiplications for squaring
                 * (n-1) additions for sum
                 * 1 division for mean of squares
-                * 1 square root (costs 20 FLOPs)
-            - Total FLOPs per std = 4n + 20
+                * 1 square root (costs 1 FLOP)
+            - Total FLOPs per std = 4n + 1
             - For batched inputs, multiply by batch size
             - Scalar inputs return 0 FLOPs
         """

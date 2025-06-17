@@ -121,7 +121,7 @@ class PowerOperation(FlopOperation):
     """
 
     # Constants for different types of power operations
-    FLOPS_PER_SQRT = 20  # Specialized square root algorithm
+    FLOPS_PER_SQRT = 1 # As per https://discourse.julialang.org/t/how-many-flops-does-it-take-to-compute-a-square-root/89027
     FLOPS_PER_CBRT = 25  # Specialized cube root algorithm
     FLOPS_PER_RECIPROCAL = 1  # Single division operation
     FLOPS_PER_FRACTIONAL = 40  # Logarithm + exponential for fractional powers
@@ -133,7 +133,7 @@ class PowerOperation(FlopOperation):
         - Integer powers > 0: Uses repeated multiplication (exponent-1 FLOPs)
         - Integer power = 0: No FLOPs (returns 1)
         - Integer power < 0: Same as positive + 1 division
-        - Square root: Uses specialized sqrt algorithm (~20 FLOPs)
+        - Square root: 1 FLOP
         - Cube root: Uses specialized cube root algorithm (~25 FLOPs)
         - Reciprocal: Single division operation (1 FLOP)
         - Other fractional powers: Uses logarithm (~20 FLOPs) and exponential (~20 FLOPs)
