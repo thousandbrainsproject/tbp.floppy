@@ -108,8 +108,8 @@ class FlopCountingEvidenceGraphLM(EvidenceGraphLM):
 
         # Account for FLOPs for KDTree Construction
         num_reference_points = len(graph_location_vote)
-        dim1 = self.possible_locations[graph_id].shape[1]
-        kdtree_flops = int(num_reference_points * np.log2(num_reference_points) * dim1)
+        dim = graph_location_vote.shape[1]  # Should be 3 for x,y,z coordinates
+        kdtree_construction_flops = int((5 + dim) * num_reference_points * np.log2(num_reference_points))
 
         (radius_node_dists, radius_node_ids) = vote_location_tree.query(
             self.possible_locations[graph_id],
@@ -124,20 +124,20 @@ class FlopCountingEvidenceGraphLM(EvidenceGraphLM):
 
         # Tree Traversal FLOPs
         # Depth of tree is log2(num_reference_points) for balanced tree
-        dim1 = self.possible_locations[graph_id].shape[1]
-        traversal_flops = num_search_points * dim1 * np.log2(num_reference_points)
+        dim = self.possible_locations[graph_id].shape[1]
+        traversal_flops = num_search_points * dim * np.log2(num_reference_points)
         # FLOPs for distance
         num_examined_points = int(np.log2(num_reference_points))
         distance_flops = (
-            num_search_points * num_examined_points * (3 * dim1 + dim1 + 1)
-        )  # dim1*(3 ops per dim) + dim1 additions + 1 sqrt
+            num_search_points * num_examined_points * (3 * dim + dim + 1)
+        )  # dim*(3 ops per dim) + dim additions + 1 sqrt
         # Heap operations
         heap_flops = num_search_points * num_examined_points * np.log2(max(vote_nn, 1))
 
         # FLOPs for bounding box check
-        bounding_box_flops = num_search_points * num_examined_points * dim1
+        bounding_box_flops = num_search_points * num_examined_points * dim
         total_flops = int(
-            kdtree_flops
+            kdtree_construction_flops
             + traversal_flops
             + distance_flops
             + heap_flops
@@ -225,18 +225,27 @@ class FlopCountingEvidenceGraphLM(EvidenceGraphLM):
         num_reference_points = len(
             self.graph_memory.get_locations_in_graph(graph_id, input_channel)
         )
-        dim1 = search_locations.shape[1]
-        traversal_flops = num_search_points * dim1 * np.log2(num_reference_points)
+        dim = search_locations.shape[1]  # Should be 3 for x,y,z coordinates
+        
+        # KDTree construction FLOPs
+        kdtree_construction_flops = int((5 + dim) * num_reference_points * np.log2(num_reference_points))
+        
+        # Tree Traversal FLOPs
+        traversal_flops = num_search_points * dim * np.log2(num_reference_points)
         num_examined_points = int(np.log2(num_reference_points))
         distance_flops = (
-            num_search_points * num_examined_points * (3 * dim1 + dim1 + 1)
-        )  # dim1*(3 ops per dim) + dim1 additions + 1 sqrt
+            num_search_points * num_examined_points * (3 * dim + dim + 1)
+        )  # dim*(3 ops per dim) + dim additions + 1 sqrt
         heap_flops = (
             num_search_points * num_examined_points * np.log2(self.max_nneighbors)
         )
-        bounding_box_flops = num_search_points * num_examined_points * dim1
+        bounding_box_flops = num_search_points * num_examined_points * dim
         total_flops = int(
-            traversal_flops + distance_flops + heap_flops + bounding_box_flops
+            kdtree_construction_flops
+            + traversal_flops
+            + distance_flops
+            + heap_flops
+            + bounding_box_flops
         )
         if self.flop_counter is not None:
             self.flop_counter.add_flops(total_flops)
