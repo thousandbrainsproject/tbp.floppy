@@ -119,7 +119,7 @@ The FLOP counting for these operations is done by inheriting from the above clas
 KDTree operations are one of the key components we track in Monty's evidence matching system.
 
 **KDTree Construction:**
-The construction of a k-d tree has a complexity of $O((1+k)n \log_2(n))$ FLOPs, where:
+The construction of a k-d tree has a complexity of $O((5+k)n \log_2(n))$ FLOPs, where:
 
 - $n$ is the number of points in the dataset
 - $k$ is the number of dimensions
@@ -127,11 +127,11 @@ The construction of a k-d tree has a complexity of $O((1+k)n \log_2(n))$ FLOPs, 
 
 For each level of the tree ($\log_2(n)$ levels), we need to:
 
-1. Find the median along the current dimension ($O(n)$ operations)
+1. Find the median along the current dimension ($5n$ operations)
 2. Partition the points ($O(kn)$ operations to compare k-dimensional points)
 
-Thus, total FLOPs per level = $n + kn = (1 + k)n$, and total across the tree is:
-$(1 + k)n \log_2(n)$
+Thus, total FLOPs per level = $n + kn = (5 + k)n$, and total across the tree is:
+$(5 + k)n \log_2(n)$
 
 ⚠️ Note: This differs from the asymptotic complexity O($n \log^2 n$), which assumes median-finding is done via full sorting ($O(n \log n)$) at each level. Here, we assume median-finding is linear-time and count FLOPs explicitly for real-world cost estimation.
 
