@@ -12,7 +12,7 @@ Multiple approaches are necessary because numerical operations in Python are imp
 
 1. NumPy's low-level operations are implemented through the ufunc system, which we can intercept using TrackedArray's `__array_ufunc__` interface
 2. Higher-level functions like `np.matmul` or `np.linalg.norm` don't use ufuncs, so we need explicit function wrapping to count their FLOPs
-3. Complex operations from SciPy and scikit-learn (like KD-tree queries) are implemented by overriding methods in Monty directly, because these are harder to intercept.
+3. Complex operations from SciPy and scikit-learn (like KD-tree queries) are implemented by overriding methods in Monty directly, as these operations are more challenging to intercept and their FLOP counts are inherently dependent on their internal implementations.
 
 ## Core Components
 
@@ -28,11 +28,11 @@ The `FlopCounter` is the central component that manages FLOP counting across all
        print(f"FLOPs: {counter.flops}")
    ```
 
-2. **Thread-Safe Operation**: The internal FLOP count (`self.flops`) is protected by a `threading.Lock`, which ensures that updates from multiple threads do not interfere with each other. For example, if two threads try to add to the counter at the same time, the lock ensures they don’t overwrite each other’s updates — the final result will be correct.
+2. **Thread-Safe Operation**: The internal FLOP count (`self.flops`) is protected by a `threading.Lock`, which ensures that updates from multiple threads do not interfere with each other. For example, if two threads try to add to the counter at the same time, the lock ensures they don't overwrite each other's updates — the final result will be correct.
 
-Only use FlopCounter in a single thread at a time. If you’re in a multithreaded program, make sure:
+That said, we **strongly recommend** users to only use FlopCounter in a single thread. If you're in a multithreaded program, make sure:
 - Only one thread is using FlopCounter at any given time.
-- Other threads are not using NumPy while it’s active, unless you fully understand the risks.
+- Other threads are not using NumPy while it's active, unless you fully understand the risks.
 
 3. **Selective Monitoring**:
    - `skip_paths`: Exclude specific code paths from FLOP counting
@@ -84,7 +84,7 @@ Only use FlopCounter in a single thread at a time. If you’re in a multithreade
    - Mathematical functions (sqrt, exp, log)
    - Linear algebra operations (dot, matmul)
    - Reductions (sum, mean)
-   - Universal functions (ufuncs)
+   - For all operations, please see `registry.py`
 
 ### Function Wrapping
 
@@ -119,7 +119,7 @@ The FLOP counting for these operations is done by inheriting from the above clas
 KDTree operations are one of the key components we track in Monty's evidence matching system.
 
 **KDTree Construction:**
-The construction of a k-d tree has a complexity of $O(kn \log_2(n))$ FLOPs, where:
+The construction of a k-d tree has a complexity of $O((1+k)n \log_2(n))$ FLOPs, where:
 
 - $n$ is the number of points in the dataset
 - $k$ is the number of dimensions
@@ -130,8 +130,13 @@ For each level of the tree ($\log_2(n)$ levels), we need to:
 1. Find the median along the current dimension ($O(n)$ operations)
 2. Partition the points ($O(kn)$ operations to compare k-dimensional points)
 
+Thus, total FLOPs per level = $n + kn = (1 + k)n$, and total across the tree is:
+$(1 + k)n \log_2(n)$
+
+⚠️ Note: This differs from the asymptotic complexity O($n \log^2 n$), which assumes median-finding is done via full sorting ($O(n \log n)$) at each level. Here, we assume median-finding is linear-time and count FLOPs explicitly for real-world cost estimation.
+
 **KDTree Query:**
-For querying nearest neighbors, our implementation breaks down FLOP counting into several components. Note that we assume a balanced tree structure, which is the default behavior in [SciPy's KDTree implementation (balanced_tree=True)](https://docs.scipy.org/doc/scipy-1.15.0/reference/generated/scipy.spatial.KDTree.html):
+For querying nearest neighbors, our implementation breaks down FLOP counting into several components. Note that we assume a balanced tree structure, which is the default behavior in [SciPy's KDTree implementation (balanced_tree=True)](https://docs.scipy.org/doc/scipy-1.15.0/reference/generated/scipy.spatial.KDTree.html) - a reasonable assumption given the relatively uniform nature of the learned point clouds (i.e., there aren't any points of extreme density):
 
 1. **Tree Traversal:**
    - FLOPs = num_search_points × dim × log₂(num_reference_points)
@@ -143,16 +148,16 @@ For querying nearest neighbors, our implementation breaks down FLOP counting int
    - Where num_examined_points = log₂(num_reference_points) due to balanced tree property
    - 3 operations per dimension (subtract, square, add)
    - dim additions for summing
-   - 1 square root operation
+   - 20 square root operation
 
 3. **Heap Operations:**
-   - FLOPs = num_search_points × num_examined_points × log₂(k)
-   - Where k is the number of nearest neighbors requested (vote_nn)
+   - FLOPs = num_search_points × num_examined_points × log₂(vote_nn)
+   - Where vote_nn is the number of nearest neighbors requested 
    - Maintains priority queue for k-nearest neighbors
 
 4. **Bounding Box Checks:**
    - FLOPs = num_search_points × num_examined_points × dim
-   - Represents comparisons against bounding box boundaries
+   - Represents comparisons against bounding box boundaries alone one dimension and there is no need for subtraction, squaring, or summation like in Euclidean distance computation
 
 Total query FLOPs = traversal_flops + distance_flops + heap_flops + bounding_box_flops
 
@@ -161,7 +166,7 @@ Where:
 - num_search_points: number of query points
 - num_reference_points: number of points in the KD-tree
 - dim: dimensionality of the points
-- num_examined_points: estimated as log₂(num_reference_points)
+- num_examined_points: approximate number of points visited during traveral and backtracking (estimated as log₂(num_reference_points))
 
 Note: These are theoretical approximations. Actual FLOP counts may vary based on:
 
