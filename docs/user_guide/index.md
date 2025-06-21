@@ -133,6 +133,8 @@ For each level of the tree ($\log_2(n)$ levels), we need to:
 Thus, total FLOPs per level = $n + kn = (5 + k)n$, and total across the tree is:
 $(5 + k)n \log_2(n)$
 
+Note: A script implementing this FLOP counting formula for KDTree construction during model initialization can be found at `tbp.tbs_sensorimotor_intelligence/scripts/count_model_init_flops.py`.
+
 ⚠️ Note: This differs from the asymptotic complexity O($n \log^2 n$), which assumes median-finding is done via full sorting ($O(n \log n)$) at each level. Here, we assume median-finding is linear-time and count FLOPs explicitly for real-world cost estimation.
 
 **KDTree Query:**
