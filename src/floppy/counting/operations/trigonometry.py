@@ -181,7 +181,7 @@ class ArcSineOperation(FlopOperation):
     """
 
     # Constants for the arcsine operation
-    FLOPS_PER_ELEMENT = 24  # FLOPs for one arcsine calculation
+    FLOPS_PER_ELEMENT = 44  # FLOPs for one arcsine calculation
 
     def count_flops(
         self, *args: Any, result: np.ndarray, **kwargs: Any
@@ -210,13 +210,13 @@ class ArcSineOperation(FlopOperation):
                - Subtraction (1-x²): 1 FLOP
 
             2. Square root and division:
-               - Square root: 1 FLOP
+               - Square root: 20 FLOP
                - Division: 1 FLOP
 
             3. Arctangent calculation:
                - One arctangent: 20 FLOPs
 
-            Total: 24 FLOPs per element
+            Total: 44 FLOPs per element
         """
         # Handle both scalar and array inputs
         num_elements = 1 if np.isscalar(result) else np.size(result)
@@ -232,7 +232,7 @@ class ArccosOperation(FlopOperation):
     """
 
     # Constants for the arccos operation
-    FLOPS_PER_ELEMENT = 26  # FLOPs for one arccos calculation
+    FLOPS_PER_ELEMENT = 44  # FLOPs for one arccos calculation
 
     def count_flops(
         self, *args: Any, result: np.ndarray, **kwargs: Any
@@ -260,7 +260,7 @@ class ArccosOperation(FlopOperation):
                - Two subtractions (1-x, 1+x): 2 FLOPs
 
             2. Square root operations:
-               - Two square roots: 2 FLOPs
+               - Two square roots: 40 FLOPs
 
             3. Division and arctangent:
                - Division: 1 FLOP
@@ -269,7 +269,7 @@ class ArccosOperation(FlopOperation):
             4. Final scaling:
                - Multiplication by 2: 1 FLOP
 
-            Total: 26 FLOPs per element
+            Total: 44 FLOPs per element
         """
         # Handle both scalar and array inputs
         num_elements = 1 if np.isscalar(result) else np.size(result)
