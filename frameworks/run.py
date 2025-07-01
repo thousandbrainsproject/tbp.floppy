@@ -20,6 +20,7 @@ from tbp.monty.frameworks.run import (
     print_config,
     run,
 )
+from tbp.monty.frameworks.models.evidence_matching import EvidenceGraphLM
 
 from floppy.counting.logger import LogLevel
 from floppy.counting.tracer import MontyFlopTracer
@@ -60,15 +61,16 @@ def wrap_experiment_with_flops(experiment_cls: Type, run_name: str) -> Type:
             lm_config = modified_config["monty_config"]["learning_module_configs"][
                 lm_key
             ]
-            if lm_config["learning_module_class"] == "EvidenceGraphLM":
+            if lm_config["learning_module_class"] == EvidenceGraphLM:
                 lm_config["learning_module_class"] = FlopCountingEvidenceGraphLM
                 lm_config["learning_module_args"]["gsg_class"] = (
                     FlopCountingEvidenceGoalStateGenerator
                 )
-            # else:
-            #     raise NotImplementedError(
-            #         f"FLOP counting is not implemented for learning module class: {lm_config['learning_module_class']}"
-            #     )
+            else:
+                print(
+                    f"FLOP counting is not implemented for learning module class: {lm_config['learning_module_class']}" \
+                    "Skipping FLOP counting for this learning module (normal during pretraining, which uses DisplacementGraphLM)."
+                )
 
         original_setup(self, modified_config)
 

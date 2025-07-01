@@ -386,7 +386,8 @@ class FlopCounter(ContextDecorator):
         frame = inspect.currentframe()
         try:
             # Single pass through the stack to check all conditions
-            in_wrapper = False
+            has_wrapper = False
+            has_array_ufunc = False
             temp_frame = frame
             while temp_frame:
                 code_name = temp_frame.f_code.co_name
@@ -394,9 +395,9 @@ class FlopCounter(ContextDecorator):
 
                 # Check wrapper and array_ufunc conditions
                 if code_name == "wrapper":
-                    in_wrapper = True
-                elif in_wrapper and code_name == "__array_ufunc__":
-                    return True
+                    has_wrapper = True
+                elif code_name == "__array_ufunc__":
+                    has_array_ufunc = True
 
                 # Check path-based conditions
                 if any(path in filename for path in self.include_paths):
@@ -410,7 +411,8 @@ class FlopCounter(ContextDecorator):
                     del temp_frame
                 temp_frame = next_frame
 
-            return False
+            # Exclude if both wrapper and __array_ufunc__ are in the call stack
+            return has_wrapper and has_array_ufunc
         finally:
             del frame  # Clean up our main frame reference
 
@@ -418,8 +420,8 @@ class FlopCounter(ContextDecorator):
         """Log the FLOP operation with details about the calling context.
 
         This method traverses the call stack to find the first caller outside of the
-        floppy/counting directory and logs the operation with relevant metadata including
-        the file, line number, function name, and timestamp.
+        floppy/counting directory and logs the operation with relevant metadata
+        including the file, line number, function name, and timestamp.
 
         Args:
             count: The number of FLOPs to log for this operation.
@@ -432,7 +434,9 @@ class FlopCounter(ContextDecorator):
             # Check if file is within floppy/counting directory using package-relative path
             if not any(
                 str(file_path).endswith(f"floppy/counting/{subdir}")
-                for subdir in ["core", "logger", "operations", "registry", "tracer.py"]
+                for subdir in [
+                    "core", "logger", "operations", "registry", "tracer.py"
+                ]
             ):
                 operation = FlopLogEntry(
                     flops=count,

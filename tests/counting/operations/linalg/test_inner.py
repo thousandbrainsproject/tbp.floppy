@@ -33,7 +33,7 @@ def test_inner_2d():
         )  # 4 inner products * (2 multiplications + 1 addition)
         np.testing.assert_allclose(
             result,
-            np.array([[17, 23], [39, 53]]),  # [[1*5+2*6, 1*7+2*8], [3*5+4*6, 3*7+4*8]]
+            np.array([[17, 23], [39, 53]]), 
         )
 
 

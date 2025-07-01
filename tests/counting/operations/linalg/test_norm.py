@@ -17,7 +17,7 @@ def test_norm_basic():
     with counter:
         a = np.array([[1, 2], [3, 4]])
         result = np.linalg.norm(a)  # Frobenius norm by default
-        assert counter.flops == 27
+        assert counter.flops == 8
         np.testing.assert_allclose(result, 5.477225575051661)
 
 
@@ -26,7 +26,7 @@ def test_norm_1d():
     with counter:
         a = np.array([1, 2, 3])
         result = np.linalg.norm(a)  # L2 norm for vector
-        assert counter.flops == 26
+        assert counter.flops == 7
         np.testing.assert_allclose(result, 3.7416573867739413)
 
 
@@ -35,7 +35,7 @@ def test_norm_rectangular():
     with counter:
         a = np.array([[1, 2, 3], [4, 5, 6]])
         result = np.linalg.norm(a)
-        assert counter.flops == 31
+        assert counter.flops == 12
         np.testing.assert_allclose(result, 9.539392014169456)
 
 
@@ -44,7 +44,7 @@ def test_norm_3d():
     with counter:
         a = np.array([[[1, 2], [3, 4]], [[5, 6], [7, 8]]])
         result = np.linalg.norm(a)
-        assert counter.flops == 36
+        assert counter.flops == 17
         np.testing.assert_allclose(result, 14.2828568570857)
 
 
@@ -71,7 +71,7 @@ def test_norm_l2():
     with counter:
         a = np.array([1, 2, 3])
         result = np.linalg.norm(a, ord=2)  # L2 norm
-        assert counter.flops == 26
+        assert counter.flops == 7
         np.testing.assert_allclose(result, 3.7416573867739413)
 
 
