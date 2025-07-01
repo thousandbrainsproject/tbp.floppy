@@ -15,9 +15,9 @@ setup_env()
 import sys
 from pathlib import Path
 
-monty_lab_path = Path("~/tbp/tbp.tbs_sensorimotor_intelligence").expanduser().resolve()
+monty_lab_path = Path("~/tbp/monty_lab").expanduser().resolve()
 sys.path.append(str(monty_lab_path))
-from monty.configs import CONFIGS  # noqa: E402
+from dmc.configs import CONFIGS  # noqa: E402
 
 from frameworks.run import flop_main  # noqa: E402
 

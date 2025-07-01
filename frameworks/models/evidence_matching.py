@@ -129,7 +129,7 @@ class FlopCountingEvidenceGraphLM(EvidenceGraphLM):
         # FLOPs for distance
         num_examined_points = int(np.log2(num_reference_points))
         distance_flops = (
-            num_search_points * num_examined_points * (3 * dim + dim + 20)
+            num_search_points * num_examined_points * (3 * dim + dim + 1)
         )  # dim*(3 ops per dim) + dim additions + 1 sqrt
         # Heap operations
         heap_flops = num_search_points * num_examined_points * np.log2(max(vote_nn, 1))

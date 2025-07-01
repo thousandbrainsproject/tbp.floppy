@@ -107,7 +107,7 @@ class StdOperation(FlopOperation):
     """
 
     # Cost of square root operation (other operations cost 1 FLOP each)
-    SQRT_COST = 20  # As per https://discourse.julialang.org/t/how-many-flops-does-it-take-to-compute-a-square-root/89027
+    SQRT_COST = 1  # As per https://discourse.julialang.org/t/how-many-flops-does-it-take-to-compute-a-square-root/89027
 
     def count_flops(
         self, *args: Any, result: np.ndarray, **kwargs: Any
