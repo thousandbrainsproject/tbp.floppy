@@ -65,10 +65,10 @@ def wrap_experiment_with_flops(experiment_cls: Type, run_name: str) -> Type:
                 lm_config["learning_module_args"]["gsg_class"] = (
                     FlopCountingEvidenceGoalStateGenerator
                 )
-            else:
-                raise NotImplementedError(
-                    f"FLOP counting is not implemented for learning module class: {lm_config['learning_module_class']}"
-                )
+            # else:
+            #     raise NotImplementedError(
+            #         f"FLOP counting is not implemented for learning module class: {lm_config['learning_module_class']}"
+            #     )
 
         original_setup(self, modified_config)
 
@@ -210,6 +210,7 @@ def flop_main(
             exp_config["logging_config"]["output_dir"],
             f"{exp_config['logging_config']['run_name']}_floppy",
         )
+        print(exp_config["logging_config"]["output_dir"])
 
         # Configure Floppy-specific settings
         exp_config["floppy_config"] = {

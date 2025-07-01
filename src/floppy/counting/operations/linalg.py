@@ -267,7 +267,7 @@ class NormOperation:
     """
 
     # Constants for vector norm operations
-    L2_SQRT_COST = 1  # As per empirical results in similar implementations, e.g. https://discourse.julialang.org/t/how-many-flops-does-it-take-to-compute-a-square-root/89027
+    L2_SQRT_COST = 20  # As per empirical results in similar implementations, e.g. https://discourse.julialang.org/t/how-many-flops-does-it-take-to-compute-a-square-root/89027
     POWER_COST = 40  # Cost of power operation (see PowerOperation)
 
     def count_flops(
