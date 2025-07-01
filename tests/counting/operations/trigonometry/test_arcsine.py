@@ -17,7 +17,7 @@ def test_arcsin_ufunc_syntax():
     with counter:
         a = np.array([1, 0.5, 0.25])
         result = np.arcsin(a)
-        assert counter.flops == 99
+        assert counter.flops == 72
         np.testing.assert_allclose(
             result, np.array([1.57079633, 0.52359878, 0.25268026])
         )
@@ -28,14 +28,14 @@ def test_arcsin_broadcasting():
     with counter:
         a = -0.5
         result = np.arcsin(a)
-        assert counter.flops == 33
+        assert counter.flops == 24
         np.testing.assert_allclose(result, -0.5235987755982988)
 
     counter.flops = 0
     with counter:
         a = np.array([[1, -1], [0, -0.25]])
         result = np.arcsin(a)
-        assert counter.flops == 132
+        assert counter.flops == 96
         np.testing.assert_allclose(
             result, np.array([[1.57079633, -1.57079633], [0, -0.25268026]])
         )

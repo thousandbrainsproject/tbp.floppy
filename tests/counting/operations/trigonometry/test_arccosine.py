@@ -17,7 +17,7 @@ def test_arccos_ufunc_syntax():
     with counter:
         a = np.array([-0.5, 0.0, 0.5])  # values within valid domain [-1, 1]
         result = np.arccos(a)
-        assert counter.flops == 132  # 44 FLOPs * 3 elements = 132
+        assert counter.flops == 78  # 26 FLOPs * 3 elements = 78
         np.testing.assert_allclose(
             result, np.array([2.0943951, 1.57079633, 1.04719755])
         )
@@ -28,7 +28,7 @@ def test_arccos_scalar():
     with counter:
         a = 0.5
         result = np.arccos(a)
-        assert counter.flops == 44
+        assert counter.flops == 26
         np.testing.assert_allclose(result, np.array([1.04719755]))
 
 
@@ -37,7 +37,7 @@ def test_arccos_broadcasting():
     with counter:
         a = np.array([[0.1, 0.2], [0.3, 0.4]])
         result = np.arccos(a)
-        assert counter.flops == 176  # 44 FLOPs * 4 elements = 176
+        assert counter.flops == 104  # 26 FLOPs * 4 elements = 104
         np.testing.assert_allclose(
             result, np.array([[1.47062894, 1.36943841], [1.26610367, 1.15927948]])
         )
