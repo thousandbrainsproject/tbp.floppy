@@ -69,7 +69,9 @@ def wrap_experiment_with_flops(experiment_cls: Type, run_name: str) -> Type:
                 )
             elif lm_config["learning_module_class"] == DisplacementGraphLM:
                 print("The current experiment uses DisplacementGraphLM (pretraining experiment) \
-                      \nwhich has no FlopCounting version implemented.")
+                      \nwhich has no FlopCounting version implemented. \
+                      \nThis is fine for pre-training FLOP counting, as we only implement a FlopCounting version of EvidenceGraphLM \
+                      \nto catch certain inference-only related FLOPs.")
             else:
                 raise ValueError(
                     f"FLOP counting is not implemented for learning module class: {lm_config['learning_module_class']}")
