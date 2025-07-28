@@ -37,6 +37,8 @@ jobs:
         run: |
           pip install mkdocs
           pip install mkdocs-material
+          pip install mkdocstrings
+          pip install mkdocstrings-python
           # Add any MkDocs themes or plugins you're using, for example:
           # pip install mkdocs-mermaid2-plugin
           # Or if you have a requirements.txt file:
