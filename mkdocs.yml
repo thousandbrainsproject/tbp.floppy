@@ -24,8 +24,8 @@ theme:
     - search.suggest
     - search.highlight
 
-repo_name: floppy
-repo_url: https://github.com/yourusername/floppy
+repo_name: thousandbrainsproject/tbp.floppy
+repo_url: https://github.com/thousandbrainsproject/tbp.floppy
 
 nav:
   - Home: index.md
