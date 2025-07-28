@@ -36,8 +36,8 @@ jobs:
       - name: Install dependencies
         run: |
           pip install mkdocs
+          pip install mkdocs-material
           # Add any MkDocs themes or plugins you're using, for example:
-          # pip install mkdocs-material
           # pip install mkdocs-mermaid2-plugin
           # Or if you have a requirements.txt file:
           # pip install -r requirements.txt
